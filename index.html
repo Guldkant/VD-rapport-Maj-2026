@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VD-rapport Maj 2026 - GK Restauranger AB</title>
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #E8C547;
+            --gold-dark: #B8941F;
+            --black: #1a1a1a;
+            --gray-dark: #2d2d2d;
+            --gray: #666;
+            --gray-light: #f0f0f0;
+            --green: #2E7D32;
+            --green-light: #E8F5E9;
+            --red: #C62828;
+            --red-light: #FFEBEE;
+            --orange: #E65100;
+            --orange-light: #FFF3E0;
+            --blue: #1565C0;
+            --blue-light: #E3F2FD;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.7;
+            color: var(--black);
+            background: #fafafa;
+        }
+
+        /* Animations */
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulseGold {
+            0%, 100% { box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3); }
+            50% { box-shadow: 0 4px 20px rgba(212, 175, 55, 0.5); }
+        }
+        .animate-on-scroll {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .animate-on-scroll.visible { opacity: 1; transform: translateY(0); }
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.2s; }
+        .stagger-3 { transition-delay: 0.3s; }
+        .stagger-4 { transition-delay: 0.4s; }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 40%, #1a1a1a 100%);
+            color: white; padding: 100px 20px 70px; text-align: center; position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light), var(--gold), var(--gold-dark));
+            animation: shimmer 3s ease-in-out infinite; background-size: 200% 100%;
+        }
+        .hero-logo { width: 120px; height: auto; margin-bottom: 20px; filter: brightness(0) invert(1); animation: fadeInUp 0.8s ease-out; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 10px; font-weight: 700; animation: fadeInUp 0.8s ease-out 0.2s both; }
+        .hero .report-type { font-size: 1.5rem; color: var(--gold-light); margin-bottom: 8px; animation: fadeInUp 0.8s ease-out 0.3s both; }
+        .hero .period { font-size: 1.1rem; opacity: 0.7; animation: fadeInUp 0.8s ease-out 0.4s both; }
+        .hero-meta { display: flex; justify-content: center; gap: 40px; margin-top: 30px; flex-wrap: wrap; animation: fadeInUp 0.8s ease-out 0.5s both; }
+        .hero-meta-item { text-align: center; }
+        .hero-meta-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5; margin-bottom: 4px; }
+        .hero-meta-value { font-size: 1rem; font-weight: 600; color: var(--gold-light); }
+
+        /* Nav */
+        .nav-bar { background: white; padding: 15px 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.08); border-bottom: 2px solid var(--gold); }
+        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+        .nav-inner::-webkit-scrollbar { display: none; }
+        .nav-link { padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; color: var(--gray); text-decoration: none; white-space: nowrap; transition: all 0.3s ease; }
+        .nav-link:hover, .nav-link.active { background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%); color: white; }
+
+        /* Layout */
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .section { background: white; margin: 40px 0; padding: 60px 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-top: 4px solid var(--gold); }
+        .section-header { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid var(--gray-light); }
+        .section-number { background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 700; flex-shrink: 0; animation: pulseGold 2s ease-in-out infinite; }
+        .section-title h2 { font-size: 2.2rem; color: var(--black); margin-bottom: 5px; }
+        .section-title .subtitle { color: var(--gray); font-size: 1.1rem; }
+
+        /* Content */
+        .content-text { font-size: 1.05rem; line-height: 1.8; color: #444; margin: 20px 0; }
+        .content-text p { margin-bottom: 16px; }
+        .sub-heading { font-size: 1.4rem; color: var(--black); margin: 35px 0 15px; padding-bottom: 10px; border-bottom: 2px solid var(--gray-light); }
+
+        /* Cards */
+        .key-points { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin: 30px 0; }
+        .key-point { background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%); padding: 25px; border-radius: 8px; border-left: 4px solid var(--gold); transition: all 0.3s ease; }
+        .key-point:hover { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.2); }
+        .key-point h4 { color: var(--black); margin-bottom: 10px; font-size: 1.1rem; }
+        .key-point p { color: var(--gray); font-size: 0.95rem; line-height: 1.7; }
+        .key-point.challenge { border-left-color: var(--orange); }
+        .key-point.success { border-left-color: var(--green); }
+
+        .card { background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%); padding: 25px; border-radius: 8px; border-left: 4px solid var(--gold); transition: all 0.3s ease; }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.2); }
+
+        /* Boxes */
+        .highlight-box { background: linear-gradient(135deg, var(--gray-dark) 0%, var(--black) 100%); color: white; padding: 30px; border-radius: 8px; margin: 30px 0; border-top: 4px solid var(--gold); }
+        .highlight-box h3 { font-size: 1.4rem; margin-bottom: 15px; color: var(--gold-light); }
+        .highlight-box p, .highlight-box li { color: rgba(255,255,255,0.9); line-height: 1.8; }
+        .highlight-box ul { list-style: none; }
+        .highlight-box li { padding: 8px 0; padding-left: 30px; position: relative; }
+        .highlight-box li:before { content: "\2192"; position: absolute; left: 0; color: var(--gold); font-weight: bold; font-size: 1.2rem; }
+
+        .goal-box { background: linear-gradient(135deg, #fffbf0 0%, #fff8e1 100%); padding: 30px; border-radius: 8px; margin: 30px 0; border-left: 4px solid var(--gold); }
+        .goal-box h3 { color: var(--black); margin-bottom: 15px; font-size: 1.3rem; }
+        .goal-box p { color: #444; line-height: 1.8; }
+        .goal-box ul { list-style: none; margin-top: 10px; }
+        .goal-box li { padding: 6px 0; padding-left: 25px; position: relative; color: #444; }
+        .goal-box li:before { content: "\2192"; position: absolute; left: 0; color: var(--gold); font-weight: bold; }
+
+        .vd-quote { border-left: 4px solid var(--gold); padding: 20px 25px; margin: 25px 0; background: linear-gradient(135deg, #fffbf0 0%, #fff8e1 100%); border-radius: 0 8px 8px 0; font-style: italic; color: #555; font-size: 1.1rem; line-height: 1.8; }
+
+        /* KPI cards */
+        .kpi-hero-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0; }
+        .kpi-hero-card { background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%); padding: 25px 20px; border-radius: 8px; border-top: 4px solid var(--gold); text-align: center; transition: all 0.3s ease; }
+        .kpi-hero-card:hover { transform: translateY(-6px); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2); }
+        .kpi-hero-label { font-size: 0.85rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .kpi-hero-value { font-size: 2.2rem; font-weight: 700; color: var(--black); line-height: 1.2; }
+        .kpi-hero-compare { font-size: 0.85rem; margin-top: 6px; font-weight: 600; }
+        .kpi-positive { color: var(--green); }
+        .kpi-negative { color: var(--red); }
+        .kpi-neutral { color: var(--gray); }
+
+        /* Tables */
+        .data-table-wrapper { overflow-x: auto; margin: 25px 0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        .data-table thead th { background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%); color: white; padding: 14px 18px; text-align: right; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .data-table thead th:first-child { text-align: left; }
+        .data-table tbody td { padding: 12px 18px; text-align: right; border-bottom: 1px solid #eee; transition: background 0.2s ease; }
+        .data-table tbody td:first-child { text-align: left; font-weight: 500; color: var(--black); }
+        .data-table tbody tr:nth-child(even) { background: #fafafa; }
+        .data-table tbody tr:hover { background: #fff8e1; }
+        .data-table tbody tr.total-row td { font-weight: 700; border-top: 2px solid var(--gold); background: linear-gradient(135deg, #fffbf0 0%, #fff8e1 100%); }
+
+        /* Status badges */
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
+        .status-good { background: var(--green-light); color: var(--green); }
+        .status-warning { background: var(--orange-light); color: var(--orange); }
+        .status-alert { background: var(--red-light); color: var(--red); }
+
+        /* Two column */
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 20px 0; }
+
+        /* Progress bars */
+        .progress-container { margin: 20px 0; }
+        .progress-label { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; font-weight: 500; }
+        .progress-bar { height: 12px; background: var(--gray-light); border-radius: 6px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 6px; transition: width 1.5s ease-out; background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light)); }
+
+        /* Timeline */
+        .timeline { position: relative; margin: 30px 0; padding-left: 30px; }
+        .timeline::before { content:''; position: absolute; left: 12px; top: 0; bottom: 0; width: 3px; background: linear-gradient(to bottom, var(--gold), var(--gold-dark)); border-radius: 2px; }
+        .timeline-item { position: relative; margin-bottom: 30px; }
+        .timeline-item::before { content:''; position: absolute; left: -24px; top: 6px; width: 14px; height: 14px; border-radius: 50%; background: var(--gold); border: 3px solid white; box-shadow: 0 0 0 2px var(--gold); }
+        .timeline-date { font-size: 0.85rem; color: var(--gold-dark); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .timeline-content { background: #fafafa; padding: 15px 20px; border-radius: 8px; border-left: 3px solid var(--gold); }
+        .timeline-content h4 { margin-bottom: 5px; color: var(--black); }
+        .timeline-content p { color: var(--gray); font-size: 0.92rem; }
+
+        /* Footer */
+        .footer { background: linear-gradient(135deg, var(--black) 0%, var(--gray-dark) 100%); color: white; text-align: center; padding: 60px 20px; margin-top: 60px; border-top: 4px solid var(--gold); }
+        .footer-logo { width: 100px; height: auto; margin-bottom: 20px; filter: brightness(0) invert(1); }
+        .footer h3 { font-size: 1.8rem; margin-bottom: 10px; color: var(--gold-light); }
+        .footer p { opacity: 0.8; font-size: 1rem; }
+        .footer .confidential { margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.15); font-size: 0.85rem; opacity: 0.5; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .section { padding: 40px 20px; }
+            .section-title h2 { font-size: 1.8rem; }
+            .two-column { grid-template-columns: 1fr; }
+            .kpi-hero-grid { grid-template-columns: repeat(2, 1fr); }
+            .nav-link { font-size: 0.75rem; padding: 6px 12px; }
+        }
+        @media print {
+            .nav-bar { display: none; }
+            .section { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <img src="https://raw.githubusercontent.com/nordsym/pitchdecks/refs/heads/main/guldkant-assets/Guldkant%20logga.svg" alt="Guldkant" class="hero-logo">
+        <h1>VD-rapport</h1>
+        <div class="report-type">Strategiskt styrelseunderlag &#8211; inf&#246;r sommaren</div>
+        <div class="period">Januari&#8211;April 2026 (YTD) &amp; Strategisk utblick sommar 2026</div>
+        <div class="hero-meta">
+            <div class="hero-meta-item">
+                <div class="hero-meta-label">Datum</div>
+                <div class="hero-meta-value">2026-05-11</div>
+            </div>
+            <div class="hero-meta-item">
+                <div class="hero-meta-label">F&#246;rfattare</div>
+                <div class="hero-meta-value">Erik Hemmingsson, VD</div>
+            </div>
+            <div class="hero-meta-item">
+                <div class="hero-meta-label">Styrelseordf&#246;rande</div>
+                <div class="hero-meta-value">Anna Blom</div>
+            </div>
+            <div class="hero-meta-item">
+                <div class="hero-meta-label">M&#246;testyp</div>
+                <div class="hero-meta-value">Strategiskt styrelsem&#246;te</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <div class="nav-inner">
+            <a href="#sammanfattning" class="nav-link">Sammanfattning</a>
+            <a href="#omvarld" class="nav-link">Omv&#228;rldsanalys</a>
+            <a href="#strategi" class="nav-link">Sommaren</a>
+            <a href="#utvardering" class="nav-link">Utv&#228;rdering 2025</a>
+            <a href="#personal" class="nav-link">Personal &amp; kvalitet</a>
+            <a href="#affarsplan" class="nav-link">Aff&#228;rsplan</a>
+            <a href="#utblick" class="nav-link">VD:s utblick</a>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <!-- 1. SAMMANFATTNING -->
+        <div class="section animate-on-scroll" id="sammanfattning">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <div class="section-title">
+                    <h2>Sammanfattning</h2>
+                    <div class="subtitle">Januari&#8211;April 2026 &#8211; l&#228;gesbild och strategisk riktning</div>
+                </div>
+            </div>
+
+            <div class="content-text">
+                <p>Vi st&#229;r inf&#246;r en avgörande sommar. Resorten &#246;ppnar, fotbolls-VM skapar m&#246;jligheter, och Sociale Guldkant kan bli en helt ny int&#228;ktsk&#228;lla i Vimmerby. Det kr&#228;ver att vi &#228;r redo &#8211; med r&#228;tt bemanning, sk&#228;rpta ink&#246;psrutiner och en tydlig plan f&#246;r varje enhet.</p>
+            </div>
+
+            <div class="vd-quote animate-on-scroll">
+                &#8220;Sommaren &#228;r v&#229;r st&#246;rsta m&#246;jlighet att s&#228;tta tonen f&#246;r hela &#229;ret. Nyckeln &#228;r att vi inte tappar fokus nu.&#8221;
+            </div>
+        </div>
+
+        <!-- 2. OMVÄRLDSANALYS -->
+        <div class="section animate-on-scroll" id="omvarld">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <div class="section-title">
+                    <h2>Omv&#228;rldsanalys</h2>
+                    <div class="subtitle">Branschbenchmark, konsumtionsm&#246;nster och VM-effekten</div>
+                </div>
+            </div>
+
+            <h3 class="sub-heading">14 kvartal av svag ekonomi</h3>
+            <div class="content-text">
+                <p>Enligt Visitas senaste rapport och Svenskt N&#228;ringsliv/SCB har Sverige genomlevt 14 kvartal av svag ekonomi &#8211; en av de l&#228;ngsta svaga perioderna sedan finanskrisen 2008. N&#228;ringslivsindikatorn har legat p&#229; negativa niv&#229;er sedan 2022, men b&#246;rjar nu visa tecken p&#229; v&#228;ndning.</p>
+            </div>
+
+            <h3 class="sub-heading">Restaurangmarknaden &#8211; Visita/SCB</h3>
+            <div class="content-text">
+                <p>Total restaurangf&#246;rs&#228;ljning 2024: 178 mdkr. Branschen hade 3% genomsnittlig &#229;rlig tillv&#228;xt 2010&#8211;2019, men de senaste &#229;ren har varit tuffa. Ackumulerat under 2025 ligger restaurangf&#246;rs&#228;ljningsvolymen fortfarande negativt (ca &minus;2%), men K3 2025 visade en v&#228;ndning med +1,5% totalt.</p>
+            </div>
+
+            <div class="data-table-wrapper animate-on-scroll">
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Segment</th><th>K3 2025</th><th>Ack. 2025</th><th>Kommentar</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Totalt</td><td class="kpi-positive">+1,5%</td><td class="kpi-negative">&minus;2,0%</td><td>V&#228;ndning i K3, men &#229;ret &#228;r fortfarande negativt</td></tr>
+                        <tr><td>Caterer</td><td class="kpi-positive">+5,4%</td><td class="kpi-negative">&minus;2,2%</td><td>St&#228;rkaste segmentet i K3</td></tr>
+                        <tr><td>Fastfood</td><td class="kpi-positive">+4,5%</td><td class="kpi-positive">+0,4%</td><td>Enda segmentet positivt ackumulerat</td></tr>
+                        <tr><td>Lunch</td><td class="kpi-positive">+4,2%</td><td class="kpi-negative">&minus;0,8%</td><td>Stark &#229;terh&#228;mtning</td></tr>
+                        <tr><td>Hotell</td><td class="kpi-positive">+0,2%</td><td class="kpi-negative">&minus;2,4%</td><td>Svag &#229;terh&#228;mtning</td></tr>
+                        <tr><td>N&#246;je/Event</td><td class="kpi-positive">+3,6%</td><td class="kpi-negative">&minus;1,1%</td><td>Relevant f&#246;r oss &#8211; VM kan f&#246;rst&#228;rka trenden</td></tr>
+                        <tr><td>Trafik</td><td class="kpi-positive">+1,7%</td><td class="kpi-positive">+1,0%</td><td>Stabilt positivt</td></tr>
+                        <tr><td>Personal</td><td class="kpi-negative">&minus;0,8%</td><td class="kpi-negative">&minus;2,9%</td><td>S&#228;msta segmentet &#8211; f&#246;retag sk&#228;r i f&#246;rm&#229;ner</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="content-text" style="font-size:0.92rem; color: var(--gray); border-left: 3px solid var(--gold); padding-left: 16px; margin: 15px 0;">
+                <p><strong>K&#228;lla:</strong> Restaurangindex, SCB. Bearbetat av Visita. Data presenterad p&#229; Visitas regionm&#246;te maj 2026.</p>
+            </div>
+
+            <div class="content-text">
+                <p>Bilden &#228;r tydlig: branschen v&#228;nder, men l&#229;ngsamt. G&#228;sterna har inte slutat g&#229; p&#229; krogen &#8211; men de spenderar smartare, hoppar &#246;ver f&#246;rr&#228;tten, skippar spontanfikat. F&#246;r oss inneb&#228;r det att vi m&#229;ste jobba h&#229;rdare f&#246;r varje krona. De kr&#246;gar som &#246;verlever denna cykel &#228;r de som har kontroll p&#229; sina kostnader och lojalare g&#228;ster.</p>
+            </div>
+
+            <h3 class="sub-heading">Kalmar l&#228;n &#8211; v&#229;r hemmamarknad</h3>
+            <div class="kpi-hero-grid">
+                <div class="kpi-hero-card animate-on-scroll stagger-1">
+                    <div class="kpi-hero-label">Tillv&#228;xt Kalmar l&#228;n</div>
+                    <div class="kpi-hero-value">2,5%</div>
+                    <div class="kpi-hero-compare kpi-positive">vs KI:s prognos 1,8%</div>
+                </div>
+                <div class="kpi-hero-card animate-on-scroll stagger-2">
+                    <div class="kpi-hero-label">BRP-&#246;kning</div>
+                    <div class="kpi-hero-value">+8 mdr</div>
+                    <div class="kpi-hero-compare kpi-positive">+34 000 kr/person</div>
+                </div>
+                <div class="kpi-hero-card animate-on-scroll stagger-3">
+                    <div class="kpi-hero-label">Konsumtions&#246;kning</div>
+                    <div class="kpi-hero-value">+4 mdr</div>
+                    <div class="kpi-hero-compare kpi-positive">+15 000 kr/person</div>
+                </div>
+                <div class="kpi-hero-card animate-on-scroll stagger-4">
+                    <div class="kpi-hero-label">Skatte&#246;kning</div>
+                    <div class="kpi-hero-value">+3 mdr</div>
+                    <div class="kpi-hero-compare kpi-positive">St&#228;rker kommunerna</div>
+                </div>
+            </div>
+            <div class="content-text">
+                <p>Kalmar l&#228;n har vuxit med 2,5% i snitt under 10 &#229;r &#8211; &#246;ver Konjunkturinstitutets nationella prognos p&#229; 1,8%. Det &#228;r en positiv signal f&#246;r V&#228;stervik och Vimmerby: konsumtionen per person &#246;kar med 15 000 kr. Den &#246;kade konsumtionskraften ger oss en medvind som vi m&#229;ste f&#229;nga &#8211; fr&#229;gan &#228;r om vi kan f&#229; mer av den att g&#229; genom v&#229;ra d&#246;rrar.</p>
+            </div>
+
+            <div class="key-points">
+                <div class="key-point challenge animate-on-scroll stagger-1">
+                    <h4>Utlandsresandet &#246;kar</h4>
+                    <p>Sommarbokningar utomlands har &#246;kat med 10% j&#228;mf&#246;rt med 2025. Fler svenskar v&#228;ljer att flyga &#8211; det inneb&#228;r f&#228;rre som stannar hemma och &#228;ter ute lokalt. En direkt konkurrens om konsumenternas pl&#229;nb&#246;cker.</p>
+                </div>
+                <div class="key-point success animate-on-scroll stagger-2">
+                    <h4>VM-effekten</h4>
+                    <p>Fotbolls-VM 2026 (11 juni&#8211;19 juli) &#228;r en enorm m&#246;jlighet f&#246;r restaurang- och pubbranschen. N&#246;jessegmentet v&#228;xte med +3,6% i K3 2025 &#8211; VM kan f&#246;rst&#228;rka den trenden ytterligare under sommaren.</p>
+                </div>
+                <div class="key-point animate-on-scroll stagger-3">
+                    <h4>R&#229;varupriser &amp; l&#246;ner</h4>
+                    <p>R&#229;varupriser har stabiliserats. L&#246;nekostnaderna &#246;kar men m&#229;ttligt. Inflationen &#228;r l&#229;g och Riksbanken h&#229;ller styrr&#228;ntan stilla under 2026 &#8211; vilket ger f&#246;ruts&#228;gbarhet i v&#229;ra kostnader.</p>
+                </div>
+            </div>
+
+            <h3 class="sub-heading">Sveriges VM-matcher &#8211; tid f&#246;r pubvisning?</h3>
+            <div class="content-text">
+                <p>Sverige &#228;r lottade i grupp F med Tunisien, Nederl&#228;nderna och Japan. L&#229;t oss vara &#228;rliga om matchschemat:</p>
+            </div>
+            <div class="data-table-wrapper animate-on-scroll">
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Match</th><th>Datum</th><th>Svensk tid</th><th>V&#228;rde f&#246;r oss</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Sverige &#8211; Tunisien</td><td>15 juni</td><td>04:00</td><td class="kpi-negative">Mitt i natten &#8211; ingen pubvisning</td></tr>
+                        <tr><td>Nederl&#228;nderna &#8211; Sverige</td><td>20 juni</td><td>19:00</td><td class="kpi-positive">Perfekt kv&#228;llstid &#8211; midsommarafton!</td></tr>
+                        <tr><td>Japan &#8211; Sverige</td><td>26 juni (fredag)</td><td>01:00</td><td class="kpi-positive">Fredagskv&#228;ll &#8211; vi k&#246;r! F&#246;rv&#228;ntar fullbokat.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="content-text" style="font-size:0.92rem; color: var(--gray); border-left: 3px solid var(--gold); padding-left: 16px; margin: 15px 0;">
+                <p><strong>Bed&#246;mning:</strong> Tv&#229; av tre gruppspelsmatcher har starka f&#246;ruts&#228;ttningar f&#246;r oss. Nederl&#228;nderna-matchen den 20 juni (19:00, midsommarafton) &#228;r sj&#228;lvklar. Japan-matchen den 26 juni faller p&#229; en fredag &#8211; vi k&#246;r v&#229;rt vanliga fredagsparty med VM-tema och f&#246;rv&#228;ntar fullbokat. Eventuella slutspelsmatcher kan dessutom f&#229; bra tider f&#246;r pubvisning.</p>
+            </div>
+
+            <h3 class="sub-heading">Framtidsspaning &#8211; restaurangbranschen</h3>
+            <div class="content-text">
+                <p>Branschen &#228;r inne i ett sk&#228;rningsl&#228;ge. &#197;terh&#228;mtningen har b&#246;rjat, men den kommer inte jämnt &#8211; och den kommer med nya spelregler. H&#228;r &#228;r de viktigaste trenderna som p&#229;verkar oss direkt.</p>
+            </div>
+
+            <div class="key-points" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+                <div class="key-point animate-on-scroll stagger-1">
+                    <h4>&#127968; F&#246;rsiktig &#229;terh&#228;mtning</h4>
+                    <p>Branschen v&#228;xer, men sakta. Bes&#246;ken &#246;kar marginellt medan snittnota per g&#228;st sjunker. Tillv&#228;xten drivs av fler transaktioner &#8211; inte h&#246;gre snittnotor. Det kr&#228;ver volym och effektivitet.</p>
+                </div>
+                <div class="key-point challenge animate-on-scroll stagger-2">
+                    <h4>&#128176; Prismedvetna g&#228;ster</h4>
+                    <p>G&#228;sterna &#228;r k&#228;nsligare f&#246;r pris &#228;n n&#229;gonsin. Skippar f&#246;rr&#228;tten, v&#228;ljer lunch&#246;l ist&#228;llet f&#246;r flaska. Momsh&#246;jningen fr&#229;n 12% till 25% p&#229; mat (om den kommer) kan sl&#229; h&#229;rt &#8211; b&#229;de p&#229; marginaler och p&#229; g&#228;stfl&#246;de.</p>
+                </div>
+                <div class="key-point animate-on-scroll stagger-3">
+                    <h4>&#127863; F&#246;r&#228;ndrade alkoholvanor</h4>
+                    <p>Unga dricker mindre. Avec f&#246;rsvinner fr&#229;n baren. Vinpriserna pressas av &#246;kade inhalationskostnader men g&#228;sten accepterar inte prish&#246;jningar. Cocktails och mocktails v&#228;xer &#8211; med potentiellt b&#228;ttre marginaler f&#246;r den som h&#228;nger med.</p>
+                </div>
+                <div class="key-point success animate-on-scroll stagger-1">
+                    <h4>&#127860; Ny typ av restaurangg&#228;st</h4>
+                    <p>Sharing-menyer, cocktails och &#8221;vibe&#8221; sl&#229;r den klassiska trer&#228;ttersmiddagen. G&#228;sten vill ha en upplevelse &#8211; inte bara mat. Det &#228;r exakt den riktningen Sociale Guldkant tar.</p>
+                </div>
+                <div class="key-point animate-on-scroll stagger-2">
+                    <h4>&#129302; Effektivisering &amp; AI</h4>
+                    <p>Digitala verktyg f&#246;r bemanning, ink&#246;p och g&#228;sthantering &#228;r inte l&#228;ngre framtid &#8211; det &#228;r idag. Kr&#246;gare som automatiserar rutiner frig&#246;r tid f&#246;r det som r&#228;knas: g&#228;stm&#246;tet.</p>
+                </div>
+                <div class="key-point challenge animate-on-scroll stagger-3">
+                    <h4>&#127750; Nattlivets f&#246;r&#228;ndring</h4>
+                    <p>Serveringstiderna diskuteras p&#229; riksniv&#229;. Kommunerna f&#229;r troligen mer att s&#228;ga till om. F&#246;r en krog som v&#229;r med stark nattf&#246;rs&#228;ljning &#228;r det h&#228;r en regulatorisk risk att bevaka &#8211; och en m&#246;jlighet om vi anpassar oss tidigt.</p>
+                </div>
+                <div class="key-point challenge animate-on-scroll stagger-1">
+                    <h4>&#128187; Kompetensf&#246;rs&#246;rjningen</h4>
+                    <p>Restaurangbranschen har en image-utmaning. F&#228;rre unga s&#246;ker sig hit. De som g&#246;r det st&#228;ller h&#246;gre krav p&#229; schema, kultur och utveckling. V&#229;r f&#246;rm&#229;ga att beh&#229;lla nyckelpersoner &#228;r aff&#228;rskritisk.</p>
+                </div>
+                <div class="key-point animate-on-scroll stagger-2">
+                    <h4>&#128241; Teknik f&#246;r&#228;ndrar g&#228;stresan</h4>
+                    <p>Best&#228;llnings-appar och digitala lojalitetsprogram blir standard. G&#228;sten f&#246;rv&#228;ntar sig att kunna boka, best&#228;lla och betala smidigt. Vi beh&#246;ver inte vara f&#246;rst &#8211; men vi f&#229;r inte halka efter.</p>
+                </div>
+                <div class="key-point success animate-on-scroll stagger-3">
+                    <h4>&#127757; H&#229;llbarhet som aff&#228;rskrav</h4>
+                    <p>Matsvinn, n&#228;rproducerat och milj&#246;medvetenhet &#228;r inte l&#228;ngre &#8221;nice to have&#8221; &#8211; det &#228;r en hygienfaktor. G&#228;ster och leverant&#246;rer f&#246;rv&#228;ntar det. Vi beh&#246;ver inte vara helig&#246;n men vi m&#229;ste visa att vi jobbar med det.</p>
+                </div>
+                <div class="key-point success animate-on-scroll stagger-1">
+                    <h4>&#9992;&#65039; Turism st&#228;rker restaurangnäringen</h4>
+                    <p>B&#229;de inhemsk och internationell turism &#246;kar &#8211; och turister l&#228;gger en st&#246;rre andel av sin budget p&#229; mat och dryck. F&#246;r V&#228;stervik och Vimmerby som sommardestinationer &#228;r det ren medvind.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box animate-on-scroll" style="border-left-color: var(--gold);">
+                <h3>Framtidens vinnare</h3>
+                <p>De kr&#246;gare som klarar sig b&#228;st &#228;r de som kombinerar stark lokal f&#246;rankring med professionell styrning. Flexibla koncept, digitala verktyg, tydlig identitet och f&#246;rm&#229;ga att beh&#229;lla r&#228;tt m&#228;nniskor. Stor eller liten spelar mindre roll &#8211; det handlar om att vara relevant och effektiv.</p>
+            </div>
+        </div>
+
+        <!-- 3. SOMMARENS FÖRUTSÄTTNINGAR -->
+        <div class="section animate-on-scroll" id="strategi">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <div class="section-title">
+                    <h2>Sommarens f&#246;ruts&#228;ttningar</h2>
+                    <div class="subtitle">Resorten, Sociale Guldkant och operativa prioriteringar</div>
+                </div>
+            </div>
+
+            <div class="content-text">
+                <p>Resorten &#228;r ig&#229;ng &#8211; Bello har &#246;ppnat, Medi &#246;ppnar i juni och Kajsas efter midsommar. VM-visning sker p&#229; VVIK och Bello.</p>
+            </div>
+
+            <h3 class="sub-heading">Sociale Guldkant &#8211; Vimmerby</h3>
+            <div class="content-text">
+                <p>Sociale Guldkant &#228;r v&#229;r nya satsning i Vimmerby &#8211; en italiensk sommar-vibe mitt p&#229; torget. Konceptet: &#246;ppet eftermiddag till kv&#228;ll, drinkar, pizza, avslappnad atmosf&#228;r. Dryckesavtal &#228;r signerade och f&#246;rberedelserna &#228;r klara &#8211; vi inv&#228;ntar alkoholtillst&#229;ndet.</p>
+                <p>Sociale &#228;r ett komplement till GK VBY &#8211; inte en konkurrent. Tanken &#228;r att bredda v&#229;rt erbjudande i Vimmerby och fånga en g&#228;stgrupp som vi inte n&#229;r idag.</p>
+            </div>
+
+            <h3 class="sub-heading">Tre prioriteringar f&#246;r sommaren</h3>
+            <div class="highlight-box animate-on-scroll">
+                <h3>Operativa fokusomr&#229;den</h3>
+                <ul>
+                    <li><strong>R&#229;varukostnad under kontroll:</strong> Mars visade h&#246;ga RVK-siffror (47&#8211;48%), men det f&#246;rklaras av vininvestering. April visar att vi &#228;r tillbaka p&#229; r&#228;tt sp&#229;r (37,7%). Under sommaren ska volymen ge oss rejäl h&#228;vst&#229;ng &#8211; budgetm&#229;let &#228;r 27&#8211;38% (juli l&#228;gst p&#229; 27%).</li>
+                    <li><strong>Maximera h&#246;gs&#228;songen:</strong> Juli &#228;r m&#229;naden d&#228;r vi budgeterar 1,76 Mkr i resultat bara f&#246;r V&#228;stervik. Varje dag r&#228;knas. Bemanning, r&#229;varulogistik och g&#228;stfl&#246;de m&#229;ste vara p&#229; topp.</li>
+                    <li><strong>Bonus &amp; Marknadsbidrag:</strong> Ca 200 tkr i periodglapp mot budget f&#246;r V&#228;stervik h&#228;mtas hem under juni&#8211;september. Vi f&#246;ljer upp m&#229;natligen att intaget verkligen kommer.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 4. UTVÄRDERING SOMMAR 2025 -->
+        <div class="section animate-on-scroll" id="utvardering">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <div class="section-title">
+                    <h2>Utv&#228;rdering sommar 2025</h2>
+                    <div class="subtitle">Vad sa vi efter f&#246;rra sommaren &#8211; och hur hanterar vi det inf&#246;r denna?</div>
+                </div>
+            </div>
+
+            <div class="content-text">
+                <p>Efter sommaren 2025 utv&#228;rderade varje &#228;gare s&#228;songen. H&#228;r &#228;r de viktigaste l&#228;rdomarna &#8211; och fr&#229;gan vi beh&#246;ver st&#228;lla oss: har vi adresserat dem inf&#246;r sommaren 2026?</p>
+            </div>
+
+            <h3 class="sub-heading">Reflektioner per person</h3>
+
+            <div class="key-points">
+                <div class="key-point animate-on-scroll stagger-1">
+                    <h4>Jens Liljeberg</h4>
+                    <p><strong style="color:var(--green);">Bra:</strong> Att vara med operativt i verksamheterna.<br>
+                    <strong style="color:var(--red);">D&#229;ligt:</strong> M&#229;natlig ekonomisk uppf&#246;ljning. D&#229;lig koll p&#229; vilka vi anst&#228;ller. Brist p&#229; tillr&#228;ckligt erfarna mellanchefer &#8211; f&#246;r unga medarbetare i nyckelroller.</p>
+                </div>
+                <div class="key-point animate-on-scroll stagger-2">
+                    <h4>Jonas Settlin</h4>
+                    <p><strong style="color:var(--green);">Bra:</strong> Plocka bort produkter som inte funkar. V&#228;xla upp n&#228;r det finns chans f&#246;r f&#246;rs&#228;ljning.<br>
+                    <strong style="color:var(--red);">D&#229;ligt:</strong> Vi tappar f&#246;rs&#228;ljning. Viktigaste l&#228;rdomen: b&#246;rja med tidig och tydlig planering.<br>
+                    <em>Slutsats: det har &#228;nd&#229; varit en supersommar.</em></p>
+                </div>
+                <div class="key-point animate-on-scroll stagger-3">
+                    <h4>Erik Hemmingsson</h4>
+                    <p><strong style="color:var(--green);">Bra:</strong> F&#246;rb&#228;ttrad schemal&#228;ggning.<br>
+                    <strong style="color:var(--red);">D&#229;ligt:</strong> Vi har inte lyckats infria v&#229;ra f&#246;rv&#228;ntningar. Oj&#228;mn kvalitet. Tappat i omd&#246;men. Rekryteringen n&#229;dde inte hela v&#228;gen fram.<br>
+                    <em>L&#228;rdom: tona ner f&#246;rv&#228;ntningarna, tydligare f&#246;rv&#228;ntningar p&#229; oss sj&#228;lva, och b&#228;ttre budgetuppf&#246;ljning i Vimmerby (det var nyckeln till v&#228;ndningen tidigare).</em></p>
+                </div>
+                <div class="key-point animate-on-scroll stagger-4">
+                    <h4>Henrik Hemmingsson</h4>
+                    <p><strong style="color:var(--green);">Bra:</strong> Bra sommar resultatm&#228;ssigt. Trivsel p&#229; arbetsplatsen, inga nejs&#228;gare.<br>
+                    <strong style="color:var(--red);">D&#229;ligt:</strong> Sv&#229;rare rekrytering f&#246;r r&#228;tt personal &#8211; hamnat under l&#228;gsta niv&#229;n med stora sv&#228;ngningar i kvalitet. Guldkant tappar n&#228;r Henrik H inte &#228;r p&#229; plats &#8211; han &#228;r en kulturb&#228;rare och det m&#228;rks n&#228;r han inte &#228;r d&#228;r.</p>
+                </div>
+            </div>
+
+            <div class="key-points" style="margin-top: 10px;">
+                <div class="key-point animate-on-scroll">
+                    <h4>Henrik Ark&#229;sen</h4>
+                    <p><strong style="color:var(--green);">Bra:</strong> Bra framf&#246;rh&#229;llning &#8211; nyckel till framg&#229;ng. Bra st&#228;ngning i S&#228;len som sparade m&#229;nga timmar. Vi hanterar v&#229;ra medarbetare bra och tar v&#229;rt sociala ansvar.<br>
+                    <strong style="color:var(--red);">D&#229;ligt:</strong> Sommaren i V&#228;stervik blev inte alls som f&#246;rv&#228;ntat. Samla inte f&#246;r m&#229;nga &#228;gg i samma korg hos en person (Arvid). &#196;ndra hur vi rekryterar och ha b&#228;ttre koll p&#229; vilka vi anst&#228;ller.</p>
+                </div>
+            </div>
+
+            <h3 class="sub-heading">Gemensamma slutsatser</h3>
+            <div class="two-column">
+                <div class="goal-box animate-on-scroll">
+                    <h3 style="color: var(--green);">Det som fungerade</h3>
+                    <ul>
+                        <li>Planering &#8211; saker klara i tid (menyer, rekrytering, budget, &#246;ppettider, produkter, schema)</li>
+                        <li>M&#229;nga engagerade i rekryteringen</li>
+                        <li>Budgetar och budgetarbete</li>
+                        <li>Centraliserade ink&#246;p och menyarbete</li>
+                    </ul>
+                </div>
+                <div class="goal-box animate-on-scroll" style="border-left-color: var(--red);">
+                    <h3 style="color: var(--red);">Det som m&#229;ste bli b&#228;ttre</h3>
+                    <ul>
+                        <li>D&#229;lig koll p&#229; vem som jobbar hos oss</li>
+                        <li>D&#229;lig uppf&#246;ljning kring budget</li>
+                        <li>Tydligg&#246;ra VAD vi g&#246;r och VEM som g&#246;r vad ut till personal</li>
+                        <li>Kundn&#246;jdhet beh&#246;ver bli ett nyckeltal</li>
+                        <li>Beh&#246;ver s&#228;tta policy f&#246;r rekrytering</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box animate-on-scroll">
+                <h3>Nyckelfr&#229;ga: Kulturb&#228;rare</h3>
+                <p>Vi ser ett m&#246;nster: n&#228;r Henrik H inte &#228;r p&#229; plats tappar vi f&#246;rs&#228;ljning &#8211; s&#228;rskilt p&#229; n&#228;tterna. Han &#228;r en kulturb&#228;rare, och det m&#228;rks n&#228;r han inte &#228;r d&#228;r. Det &#228;r en s&#229;rbarhet vi m&#229;ste adressera.</p>
+                <p style="margin-top: 12px;">Om vi i sommar dessutom har en till enhet (Sociale) blir fr&#229;gan &#228;nnu skarpare: <strong>hur s&#228;kerst&#228;ller vi att vi har kulturb&#228;rare p&#229; b&#229;da st&#228;llena?</strong> Vi kan inte bygga tv&#229; enheters kv&#228;llskultur p&#229; en person.</p>
+            </div>
+
+            <div class="content-text" style="font-size:0.92rem; color: var(--gray); border-left: 3px solid var(--gold); padding-left: 16px; margin: 25px 0 0;">
+                <p><strong>Diskussionspunkt:</strong> G&#229; igenom samtliga punkter ovan &#8211; vilka har vi adresserat inf&#246;r sommaren 2026? Vilka kvarst&#229;r? Vad beh&#246;ver vi g&#246;ra annorlunda?</p>
+            </div>
+        </div>
+
+        <!-- 5. PERSONAL & KVALITET -->
+        <div class="section animate-on-scroll" id="personal">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <div class="section-title">
+                    <h2>Personal &amp; kvalitet</h2>
+                    <div class="subtitle">Organisationen efter Henriks avg&#229;ng, egenkontroll och tillst&#229;nd</div>
+                </div>
+            </div>
+
+            <h3 class="sub-heading">Organisationsf&#246;r&#228;ndring</h3>
+            <div class="content-text">
+                <p>Henrik Ark&#229;sens avg&#229;ng som del&#228;gare och styrelseledamot &#228;r nu genomf&#246;rd och avslutad. &#214;verl&#228;mningen &#228;r klar. Kvarvarande &#228;gare och ledningsgrupp best&#229;r av Erik Hemmingsson (VD), Jens Liljeberg (ekonomichef) och Jonas Settlin (ink&#246;pschef).</p>
+                <p>Organisationen har landat i f&#246;r&#228;ndringen. Personalen k&#228;nns stabil och optimistisk inf&#246;r sommaren.</p>
+            </div>
+
+            <h3 class="sub-heading">Kvalitetss&#228;kring &amp; egenkontroll</h3>
+            <div class="two-column">
+                <div class="goal-box animate-on-scroll">
+                    <h3>Egenkontrollprojektet</h3>
+                    <p>Henrik Ark&#229;sen fick uppdraget att s&#228;tta ig&#229;ng egenkontrollprojektet. Han har startat upp arbetet och informerat k&#246;ksm&#228;starna p&#229; samtliga enheter, men vi har inte kommit superlångt &#228;nnu &#8211; det &#228;r ig&#229;ngsatt snarare &#228;n inf&#246;rt. Parallellt h&#229;ller Erik p&#229; att ta &#246;ver ansvaret f&#246;r SBA (Systematiskt Brandskyddsarbete) &#8211; &#228;ven det under utrullning.</p>
+                </div>
+                <div class="goal-box animate-on-scroll">
+                    <h3>Alkoholtillst&#229;nd</h3>
+                    <p>Alla befintliga tillst&#229;nd &#228;r i gott skick &#8211; inga varningar, inga anm&#228;rkningar. Allt gr&#246;nt. Ans&#246;kan om alkoholtillst&#229;nd f&#246;r Sociale Guldkant &#228;r inskickad och vi inv&#228;ntar beslut.</p>
+                    <p>Att bibeh&#229;lla tillst&#229;nden &#228;r en strategisk prioritering &#8211; det &#228;r en f&#246;ruts&#228;ttning f&#246;r v&#229;r verksamhet och vi m&#229;ste s&#228;kerst&#228;lla att alla enheter lever upp till kraven.</p>
+                </div>
+            </div>
+
+            <h3 class="sub-heading">N&#228;sta steg &#8211; fokusomr&#229;den sommar</h3>
+            <div class="highlight-box animate-on-scroll">
+                <h3>Prioriteringar f&#246;r kvalitet</h3>
+                <ul>
+                    <li><strong>Egenkontroll p&#229; alla enheter:</strong> S&#228;kerst&#228;lla att rutinerna inte bara finns utan ocks&#229; genomf&#246;rs konsekvent &#8211; s&#228;rskilt n&#228;r sommarens h&#246;gs&#228;song inneb&#228;r h&#246;gre tryck.</li>
+                    <li><strong>Inkörning Sociale:</strong> Ny enhet kr&#228;ver s&#228;rskild uppm&#228;rksamhet p&#229; rutiner, ansvarigt alkoholombud och serveringstillst&#229;ndets villkor.</li>
+                    <li><strong>Resortens &#246;ppning:</strong> Tre enheter (Bello, Medi, Kajsas) som &#246;ppnar i sekvens &#8211; kvaliteten m&#229;ste vara p&#229; plats fr&#229;n dag ett p&#229; varje enhet.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 6. AFFÄRSPLAN -->
+        <div class="section animate-on-scroll" id="affarsplan">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <div class="section-title">
+                    <h2>Uppf&#246;ljning aff&#228;rsplan</h2>
+                    <div class="subtitle">8-stegsplanen &#8211; status och v&#228;gen fram&#229;t</div>
+                </div>
+            </div>
+
+            <div class="content-text">
+                <p>8-stegsplanen f&#246;r VVIK har visat framg&#229;ng som metod, men utrullningen till &#246;vriga enheter har inte kommit vidare sedan f&#246;rra styrelsem&#246;tet. Det &#228;r en &#228;rlig bild &#8211; f&#246;r&#228;ndringsarbete tar tid, och vi har prioriterat den operativa verksamheten och organisationsf&#246;r&#228;ndringen.</p>
+            </div>
+
+            <div class="highlight-box animate-on-scroll">
+                <h3>K&#228;rninsikt</h3>
+                <p>V&#229;r l&#246;nsamhet ska inte komma fr&#229;n extraordin&#228;ra insatser. Den ska komma fr&#229;n repeterbara processer. Att rulla ut aff&#228;rsplanen p&#229; alla enheter &#228;r avg&#246;rande &#8211; men det m&#229;ste g&#246;ras med kvalitet, inte hastighet.</p>
+            </div>
+
+            <h3 class="sub-heading">Status per fokusomr&#229;de</h3>
+            <div class="progress-container animate-on-scroll stagger-1">
+                <div class="progress-label"><span>Ink&#246;pskontroll &amp; avtalsvaror</span><span>75%</span></div>
+                <div class="progress-bar"><div class="progress-fill" style="width:0%;" data-target="75"></div></div>
+            </div>
+            <div class="progress-container animate-on-scroll stagger-2">
+                <div class="progress-label"><span>Nyckelpersoner med l&#229;ngsiktig plan</span><span>65%</span></div>
+                <div class="progress-bar"><div class="progress-fill" style="width:0%;" data-target="65"></div></div>
+            </div>
+            <div class="progress-container animate-on-scroll stagger-3">
+                <div class="progress-label"><span>Ekonomisk rapportering &amp; uppf&#246;ljning</span><span>60%</span></div>
+                <div class="progress-bar"><div class="progress-fill" style="width:0%;" data-target="60"></div></div>
+            </div>
+            <div class="progress-container animate-on-scroll stagger-4">
+                <div class="progress-label"><span>Sj&#246;s&#228;tta 8-stegsplanen p&#229; alla enheter</span><span>30%</span></div>
+                <div class="progress-bar"><div class="progress-fill" style="width:0%;" data-target="30"></div></div>
+            </div>
+        </div>
+
+        <!-- 7. VD:S UTBLICK -->
+        <div class="section animate-on-scroll" id="utblick">
+            <div class="section-header">
+                <div class="section-number">7</div>
+                <div class="section-title">
+                    <h2>VD:s utblick</h2>
+                    <div class="subtitle">Utmaningar, m&#246;jligheter och vad jag tror p&#229;</div>
+                </div>
+            </div>
+
+            <div class="content-text">
+                <p>Vi ligger under budget efter fyra m&#229;nader &#8211; det &#228;r fakta. Men kontexten &#228;r viktig: S&#228;len levererade en stark s&#228;song, V&#228;sterviks avvikelse f&#246;rklaras till stor del av periodeffekter i bonus, och april visade &#229;terh&#228;mtning i Vimmerby.</p>
+                <p>Nu st&#229;r vi inf&#246;r &#229;rets viktigaste period. Sommaren avg&#246;r &#229;ret &#8211; s&#229; har det alltid varit f&#246;r oss, och s&#229; &#228;r det &#228;ven 2026.</p>
+            </div>
+
+            <h3 class="sub-heading">Det jag oroar mig f&#246;r</h3>
+            <div class="key-points">
+                <div class="key-point challenge animate-on-scroll stagger-1">
+                    <h4>R&#229;varukostnaderna</h4>
+                    <p>Mars hade h&#246;ga RVK-siffror (47&#8211;48%), men det f&#246;rklaras av att vi byggde p&#229; vinlagret. April visar att vi &#228;r tillbaka p&#229; r&#228;tt sp&#229;r. Utmaningen &#228;r att h&#229;lla den niv&#229;n under sommarens h&#246;ga tempo &#8211; det kr&#228;ver disciplin i ink&#246;p och svinnhantering.</p>
+                </div>
+                <div class="key-point challenge animate-on-scroll stagger-2">
+                    <h4>Utlandsresandet</h4>
+                    <p>10% fler svenskar bokar utlandssemester i sommar. F&#246;r oss i sm&#229;st&#228;derna &#228;r det en reell risk &#8211; f&#228;rre lokala g&#228;ster under h&#246;gs&#228;songen. Vi m&#229;ste kompensera med att f&#229;nga turister och genomresa-g&#228;ster.</p>
+                </div>
+            </div>
+
+            <h3 class="sub-heading">Det jag tror p&#229;</h3>
+            <div class="key-points">
+                <div class="key-point success animate-on-scroll stagger-1">
+                    <h4>Resorten</h4>
+                    <p>Bello, Medi och Kajsas i sekvens ger oss en progressiv sommar&#246;ppning. Resorten levererade 1 661 tkr i vinst 2025 &#8211; jag ser ingen anledning att den inte ska g&#246;ra liknande i &#229;r.</p>
+                </div>
+                <div class="key-point success animate-on-scroll stagger-2">
+                    <h4>Sociale Guldkant</h4>
+                    <p>En ny enhet med l&#229;ga fasta kostnader och VM-timing. Om alkoholtillst&#229;ndet kommer i tid kan detta bli en riktig booster f&#246;r Vimmerby-f&#246;retaget.</p>
+                </div>
+                <div class="key-point success animate-on-scroll stagger-3">
+                    <h4>Teamet</h4>
+                    <p>Vi har landat organisationsf&#246;r&#228;ndringen. Folk &#228;r p&#229; plats och motiverade. Det &#228;r den viktigaste tillg&#229;ngen vi har.</p>
+                </div>
+            </div>
+
+            <div class="vd-quote animate-on-scroll">
+                &#8220;Jag &#228;r realistisk om utmaningarna men optimistisk om sommaren. Vi har r&#228;tt team, r&#228;tt koncept och r&#228;tt plan. Nu handlar det om exekvering &#8211; dag f&#246;r dag, m&#229;nad f&#246;r m&#229;nad. Sommaren avg&#246;r &#229;ret, och jag tror vi kan leverera.&#8221;
+            </div>
+
+            <div class="content-text" style="font-size:0.92rem; color: var(--gray); border-left: 3px solid var(--gold); padding-left: 16px; margin: 25px 0 0;">
+                <p><strong>Not:</strong> Varje styrelseledamot uppmanas att l&#228;sa igenom utmaningarna och tillg&#229;ngarna ovan och komma in med egna synpunkter &#8211; vad saknas? Vad beh&#246;ver vi f&#246;rbereda oss p&#229; ytterligare? Diskussion p&#229; m&#246;tet.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <img src="https://raw.githubusercontent.com/nordsym/pitchdecks/refs/heads/main/guldkant-assets/Guldkant%20logga.svg" alt="Guldkant" class="footer-logo">
+        <h3>GK Restauranger AB</h3>
+        <p>VD-rapport &#8211; Strategiskt styrelsem&#246;te, maj 2026</p>
+        <div class="confidential">Konfidentiellt &#8211; Enbart f&#246;r styrelsen</div>
+    </div>
+
+    <script>
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+        // Progress bar animations
+        const progressObserver = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    const fill = e.target.querySelector('.progress-fill');
+                    if (fill) { fill.style.width = fill.dataset.target + '%'; }
+                    progressObserver.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        document.querySelectorAll('.progress-container').forEach(el => progressObserver.observe(el));
+
+        // Active nav
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        const sections = document.querySelectorAll('.section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(s => { if (window.pageYOffset >= s.offsetTop - 120) current = s.id; });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+            });
+        });
+    </script>
+
+</body>
+</html>
